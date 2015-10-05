@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Lista de documentos</title>
+    </h:head>
+    <h:body>
+        <h:form id="form">
+            <p:growl id="msgs" showDetail="true" />
+
+            <p:dialog header="Aprobar documento" widgetVar="docDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="docDetail" style="text-align:center;">
+                    <p:panelGrid  columns="2" rendered="#{not empty documentosB.selectedDoc}">
+                        <f:facet name="header">
+                            <h:outputText value="¿Desea aprobar/desaprobar?"/>
+                        </f:facet>
+                    </p:panelGrid>
+                </p:outputPanel>
+            </p:dialog>
+
+            <p:layout fullPage="true">
+                <p:layoutUnit position="west" size="375" minSize="250" maxSize="450">
+                    <p:accordionPanel style="width: 400px">
+                        <p:tab title="Documentos por fecha" >
+                            <p:calendar id="inline"  mode="inline" size="5" showButtonPanel="true" showWeek="true" disabledWeekends="false"  locale="es"/>                            
+                        </p:tab>
+                        <p:tab title="Documentos por fechas">
+                            <h:panelGrid columns="2">
+                                <p:outputLabel for="fecha_inicio" value="Inicio:" />
+                                <p:calendar id="fecha_inicio"  effect="fold"  locale="es" />
+                                <p:outputLabel for="fecha_fin" value="Fin:" />
+                                <p:calendar id="fecha_fin"  effect="fold"   locale="es" />
+                                <f:facet name="footer">
+                                    <h:commandButton value="Mostrar"/>
+                                </f:facet>
+                            </h:panelGrid>
+                        </p:tab>
+                    </p:accordionPanel>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="center">
+                    <p:dataTable id="datableDocumentos" value="#{documentsB.documentos}" var="doc"
+                                 emptyMessage="No existen documentos"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="5,10,20"
+                                 filteredValue="#{documentsB.documentFiltered}"
+                                 widgetVar="docTable"
+                                 style="font-size: 15px;font-family: sans-serif"
+                                 selectionMode="single"
+                                 selection="#{documentsB.documentosSelected}" rowKey="#{doc.fecha}"
+                                 resizableColumns="true"
+                                 draggableColumns="true">
+                        <f:facet name="header">
+                            <h:outputText value="Documentos"/>
+                        </f:facet>
+                        <p:ajax event="rowSelect" listener="#{documentsB.onRowSelect}" update=":form:msgs" />
+                        <p:column headerText="fecha">
+                            <h:outputText value="#{doc.fecha}"/>
+                        </p:column>
+                        <p:column headerText="Material" sortBy="#{doc.materialId}">
+                            <h:outputText value="#{doc.materialId}"/>
+                        </p:column>
+
+                        <p:column filterBy="#{doc.molinoId}" sortBy="#{doc.molinoId}" headerText="Molino" filterMatchMode="exact">
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('docTable').filter()" value="#{documentsB.molinos}" var="molinos">
+                                    <f:selectItem itemLabel="Todos" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItems itemLabel="#{molinos.nombre}" itemValue="#{molinos.molinoId}"/>                                </p:selectOneMenu>
+                            </f:facet>
+                            <h:outputText value="#{doc.molinoId}" />
+                        </p:column>
+
+                        <p:column filterBy="#{doc.muestra}" sortBy="#{doc.muestra}" headerText="Muestra" filterMatchMode="contains">
+                            <h:outputText value="#{doc.muestra}"/>
+                        </p:column>
+                        <p:column filterBy="#{doc.estado}" sortBy="#{doc.estado}" headerText="Estado" filterMatchMode="exact">
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('docTable').filter()" >
+                                    <f:selectItem itemLabel="Todos" itemValue="#{null}" noSelectionOption="true" />
+                                    <f:selectItem itemLabel="Aprobado" itemValue="Aprobado" />
+                                    <f:selectItem itemLabel="NoAprobado" itemValue="Sin Aprobar" />
+                                </p:selectOneMenu>
+                            </f:facet>
+                            <h:outputText value="#{doc.estado}" />
+                        </p:column>
+                        <p:column style="width:32px;text-align: center">
+                            <p:commandButton update=":form:docDetail" oncomplete="PF('docDialog').show()" icon="ui-icon-key" title="View">
+                                <f:setPropertyActionListener value="#{doc}" target="#{documentosB.selectedDoc}" />
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                </p:layoutUnit>
+            </p:layout>
+        </h:form>
+    </h:body>
+</html>
+
