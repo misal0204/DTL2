@@ -17,6 +17,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
@@ -47,6 +48,7 @@ public class DocumentsBean implements Serializable {
     private String pass;
 
     private Date tofecha;
+    private String docu;
 
     @ManagedProperty("#{attBean}")
     private AuthenticationBean attb;
@@ -56,7 +58,7 @@ public class DocumentsBean implements Serializable {
         schema = attb.getSchema();
         usuario = attb.getUsername();
         pass = attb.getPassword();
-
+   
         String NPU = selectedNPU(schema);
 
         Map property = DBConnection.Property(usuario, pass);
@@ -187,6 +189,11 @@ public class DocumentsBean implements Serializable {
         }
     }
 
+    public String irProceso()
+    {
+        return "dl/controlprocess.xhtml?faces-redirect=true";
+    }
+    
     public List<ScMateriales> getMateriales() {
         return materiales;
     }
@@ -241,6 +248,14 @@ public class DocumentsBean implements Serializable {
 
     public void setTofecha(Date tofecha) {
         this.tofecha = tofecha;
+    }
+
+    public String getDocu() {
+        return docu;
+    }
+
+    public void setDocu(String docu) {
+        this.docu = docu;
     }
 
     public void onRowSelect(SelectEvent event) {

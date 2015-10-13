@@ -42,7 +42,6 @@
                         </p:tab>
                     </p:accordionPanel>
                 </p:layoutUnit>
-
                 <p:layoutUnit position="center">
                     <p:menubar>
                         <p:menuitem value="Crear documento" update=":formAdd:AddDocument" oncomplete="PF('diagAddDocument').show()"/>
@@ -65,6 +64,13 @@
                                 <h:outputText value="Documentos"/>
                             </f:facet>
                             <p:ajax event="rowSelect" listener="#{documentsB.onRowSelect}" update=":formCabecera:msgs" />
+                            <p:column style="width: 50px;text-align: center" headerText="View">                   
+                                <h:commandButton onclick="window.open('dl/controlprocess.xhtml')" value="ir"
+                                                 readonly="true">                                                                        
+                                    <f:setPropertyActionListener target="#{documentsB.docu}"  value="10002154"/>
+                                    <f:ajax execute="@form"/>
+                                </h:commandButton>
+                            </p:column>
                             <p:column headerText="Fecha">
                                 <p:outputLabel value="#{documentsB.toDate(doc.fecha)}" />
                             </p:column>
@@ -154,7 +160,7 @@
 
                         <h:outputText value="Material: " />
                         <h:inputText id="materiaInput" value="" />
- 
+
                         <h:outputText value="Fecha: " />
                         <h:outputText value="#{documentsB.toDate_now()}" />
 

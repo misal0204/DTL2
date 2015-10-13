@@ -38,13 +38,14 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "DlDetmh.findByNmuestraId", query = "SELECT d FROM DlDetmh d WHERE d.nmuestraId = :nmuestraId"),
     @NamedQuery(name = "DlDetmh.findByValor", query = "SELECT d FROM DlDetmh d WHERE d.valor = :valor"),
     @NamedQuery(name = "DlDetmh.findByMinimo", query = "SELECT d FROM DlDetmh d WHERE d.minimo = :minimo"),
-    @NamedQuery(name = "DlDetmh.findByMaximo", query = "SELECT d FROM DlDetmh d WHERE d.maximo = :maximo")})
+    @NamedQuery(name = "DlDetmh.findByMaximo", query = "SELECT d FROM DlDetmh d WHERE d.maximo = :maximo"),
+    @NamedQuery(name = "DlDetmh.UniqueFecha", query = "SELECT DISTINCT(d.fecha) FROM DlDetmh d")})
 public class DlDetmh implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 12)
+    @Size(min = 1, max = 12)     
     @Column(name = "DOCUMENTO")
     private String documento;
     @Basic(optional = false)
